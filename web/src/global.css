@@ -6,3 +6,12 @@ body {
     font-family: 'Cairo', sans-serif;
     @apply text-red-700;
 }
+
+@layer components {
+
+  .input-number {
+    @apply bg-red-300/20 self-stretch w-14 text-red-700 text-xl text-center outline-2 outline-red-500;
+  }
+
+  
+}

@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
-import { Icon } from "~/components/icon";
+import { ArrowLeft } from 'phosphor-react';
 import { Input } from "~/components/input";
 
 const Login = () => {
   return (
-    <div>
+    <>
       <header className="flex justify-center p-4 border-b border-red-300">
         <img src="img/logo/logo-fundo-branco.svg" className="w-32 md:w-40" />
       </header>
@@ -12,7 +12,7 @@ const Login = () => {
       <main className="p-4 container max-w-2xl">
         <div className="py-4 flex space-x-4 items-center">
           <Link to="/">
-            <Icon name="back" className="hover:scale-110" />
+            <ArrowLeft size={32} weight='bold' className="text-red-700 hover:scale-110"/>
           </Link>
           <h2 className="text-xl font-bold">Entre na sua conta</h2>
         </div>
@@ -36,7 +36,7 @@ const Login = () => {
           </Link>
         </form>
       </main>
-    </div>
+    </>
   )
 }
 

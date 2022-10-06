@@ -1,6 +1,9 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, ArrowRight, UserCircle } from 'phosphor-react';
+import { ArrowLeft } from 'phosphor-react';
+
 import { Card } from '../components/card';
+import { DateSelect } from '../components/date-select';
 
 const Profile = () => {
   return (
@@ -24,13 +27,8 @@ const Profile = () => {
         <section id="content" className='container max-w-3xl p-4 space-y-4'>
 
           <h2 className='text-red-500 text-xl font-bold'>Seus palpites</h2>
-          <div className='flex items-center justify-center p-4 space-x-6'>
-            <ArrowLeft size={32} weight='bold' className="text-red-500 hover:scale-110" />
-            <span className='md:text-lg text-gray-700 font-bold'>
-              24 de Novembro
-            </span>
-            <ArrowRight size={32} weight='bold' className="text-red-500 hover:scale-110" />
-          </div>
+          
+          <DateSelect />
 
           <div className='space-y-4'>
             <Card

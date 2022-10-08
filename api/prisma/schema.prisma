@@ -40,12 +40,14 @@ model Hint {
   userId      String
   gameId      String
   homeTeamScore Int
-  awayTeamScore Int
+  awayTeamScore Int  
   
   created_at  DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   user        User @relation(fields: [userId], references: [id])
   game        Game @relation(fields: [gameId], references: [id])
+  
+  // @@unique([userId, gameId])
   @@map("hints")
 }

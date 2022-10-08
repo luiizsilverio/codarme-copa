@@ -1,16 +1,30 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { ArrowLeft } from 'phosphor-react';
+import { Link, Navigate } from 'react-router-dom';
+import { ArrowLeft, SignOut } from 'phosphor-react';
+import { useLocalStorage } from 'react-use';
 
 import { Card } from '../components/card';
 import { DateSelect } from '../components/date-select';
 
 const Profile = () => {
+  const [auth, setAuth] = useLocalStorage('copa.auth', {});
+
+  const logout = () => setAuth({});  
+
+  if (!auth?.user?.id) {
+    return <Navigate to="/" replace={true} />
+  }
+
   return (
     <>
       <header className="bg-red-500 text-white p-4">
         <div className="container max-w-3xl pt-2 md:pr-4 flex justify-between">
-          <img src="img/logo/logo-fundo-vermelho.svg" className="w-28 md:w-40" />          
+          <img src="img/logo/logo-fundo-vermelho.svg" className="w-28 md:w-40" />
+          <div title="Sair" onClick={logout} className="p-2 cursor-pointer">
+            <SignOut 
+              size={32} weight='bold' 
+              className="text-white hover:scale-110" 
+            />
+          </div>
         </div>
       </header>
 

@@ -1,4 +1,6 @@
 import { createBrowserRouter, RouterProvider, Route } from 'react-router-dom';
+import { useLocalStorage } from 'react-use';
+
 import Home from './pages/home';
 import Login from './pages/login';
 import SignUp from './pages/signup';
@@ -28,6 +30,8 @@ const router = createBrowserRouter([
   }
 ]);
 
-export const Router = () => (
-  <RouterProvider router={router} />
-)
+export const Router = () => {
+  return (
+    <RouterProvider router={router} />
+  )
+}

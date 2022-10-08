@@ -1,6 +1,13 @@
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
+import { useLocalStorage } from 'react-use';
 
 function Home() {
+  const [auth] = useLocalStorage('copa.auth', {});
+
+  if (auth?.user?.id) {
+    return <Navigate to="/dashboard" replace={true} />
+  }
+
   return (
     <div className={`
       md:h-screen bg-red-700 text-white flex flex-col items-center

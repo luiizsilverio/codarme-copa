@@ -1,12 +1,29 @@
+import { useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { ArrowLeft, SignOut } from 'phosphor-react';
-import { useLocalStorage } from 'react-use';
+import { useAsync, useLocalStorage } from 'react-use';
+import axios from 'axios';
 
 import { Card } from '../components/card';
 import { DateSelect } from '../components/date-select';
 
+const initialDate = new Date(2022, 10, 20);
+
 const Profile = () => {
+  const [currentDate, setCurrentDate] = useState(initialDate);
   const [auth, setAuth] = useLocalStorage('copa.auth', {});
+
+  const state = useAsync(async () => {
+    const res = await axios({
+      method: 'get',
+      baseURL: import.meta.env.VITE_API_URL,
+      url: '/games',
+      params: {
+        gameTime: currentDate
+      }
+    })
+    return res.data;
+  }, [currentDate])
 
   const logout = () => setAuth({});  
 
@@ -34,7 +51,7 @@ const Profile = () => {
             <Link to="/dashboard">            
               <ArrowLeft size={32} weight='bold' className="text-white hover:scale-110" />
             </Link>
-            <h3 className='text-2xl font-bold'>Luiz Oliveira</h3>
+            <h3 className='text-2xl font-bold'>{ auth?.user?.name }</h3>
           </div>
         </section>
 
@@ -42,26 +59,17 @@ const Profile = () => {
 
           <h2 className='text-red-500 text-xl font-bold'>Seus palpites</h2>
           
-          <DateSelect />
+          <DateSelect currentDate={currentDate} onChange={setCurrentDate} />
 
           <div className='space-y-4'>
             <Card
-              timeA = {{ slug: 'sui' }}
-              timeB = {{ slug: 'cam' }}
-              match = {{ time: '07:00' }}
+              key = {game.id}
+              gameId = {game.id}
+              homeTeam="sui"
+              awayTeam="cam"
+              gameTime="07:00"
             />
             
-            <Card
-              timeA = {{ slug: 'uru' }}
-              timeB = {{ slug: 'cor' }}
-              match = {{ time: '13:00' }}
-            />
-
-            <Card
-              timeA = {{ slug: 'por' }}
-              timeB = {{ slug: 'bra' }}
-              match = {{ time: '17:00' }}
-            />
           </div>
           
         </section>

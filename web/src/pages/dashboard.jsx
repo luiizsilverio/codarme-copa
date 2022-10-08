@@ -55,7 +55,6 @@ const Dashboard = () => {
           <DateSelect currentDate={currentDate} onChange={setCurrentDate} />
 
           <div className='space-y-4'>
-
             {state.loading && 'Carregando jogos...'}
 
             {state.error && 'Ops! Algo deu errado'}
@@ -64,14 +63,13 @@ const Dashboard = () => {
               state?.value?.map((game) => (
                 <Card
                   key = {game.id}
-                  homeTeam = {{ slug: game.homeTeam }}
-                  awayTeam = {{ slug: game.awayTeam }}
-                  match = {{ time: format(new Date(game.gameTime), 'H:mm') }}
+                  gameId = {game.id}
+                  homeTeam = {game.homeTeam}
+                  awayTeam = {game.awayTeam}
+                  gameTime = {format(new Date(game.gameTime), 'H:mm')}
                 />
               ))
-            )}
-            
-           
+            )}                      
           </div>
           
         </section>

@@ -12,6 +12,7 @@ import { useState } from 'react';
 const initialDate = new Date(2022, 10, 20);
 
 const Dashboard = () => {
+  const [name, setName] = useState('');
   const [currentDate, setCurrentDate] = useState(initialDate);
   const [auth] = useLocalStorage('copa.auth', {});
 
@@ -38,10 +39,10 @@ const Dashboard = () => {
       const res = await axios({
         method: 'get',
         baseURL: import.meta.env.VITE_API_URL,
-        url: `/hints/${auth.user.username}`        
+        url: `/users/hints/${auth.user.username}`        
       })
 
-      const hintsMap = res.data.reduce((acc, hint) => {
+      const hintsMap = res.data.hints.reduce((acc, hint) => {
         acc[hint.gameId] = {
           homeTeamScore: hint.homeTeamScore,
           awayTeamScore: hint.awayTeamScore
@@ -56,7 +57,7 @@ const Dashboard = () => {
       toast.error('Erro ao carregar os palpites');
       return [];
     }
-  }, [currentDate])
+  }, [currentDate, auth.user.username])
   
 
   if (!auth?.user?.id) {
@@ -86,7 +87,7 @@ const Dashboard = () => {
           </div>
         </section>
 
-        <section id="content" className='container max-w-3xl p-4 space-y-4'>
+        <section id="content" className='container max-w-3xl p-4 pb-16 space-y-4'>
 
           <DateSelect currentDate={currentDate} onChange={setCurrentDate} />
 

@@ -1,5 +1,5 @@
 import { Link, Navigate } from "react-router-dom";
-import { CaretLeft } from 'phosphor-react';
+import { ArrowLeft } from 'phosphor-react';
 import { useLocalStorage } from "react-use";
 import { useFormik } from 'formik';
 import * as yup from 'yup';
@@ -45,13 +45,15 @@ const SignUp = () => {
   return (
     <>
       <header className="flex justify-center p-4 border-b bg-red-300">
-        <img src="img/logo/logo-fundo-vermelho.svg" className="w-32 md:w-40" />
+        <Link to="/">
+          <img src="img/logo/logo-fundo-vermelho.svg" className="w-32 md:w-40" />
+        </Link>
       </header>
 
       <main className="p-4 container max-w-2xl">
         <div className="py-4 flex space-x-4 items-center">
           <Link to="/">
-            <CaretLeft size={32} weight='bold' className="text-red-700 hover:scale-110"/>
+            <ArrowLeft size={32} weight='bold' className="text-red-700 hover:scale-110"/>
           </Link>
           <h2 className="text-xl font-bold">Crie sua conta</h2>
         </div>

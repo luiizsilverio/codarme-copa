@@ -12,8 +12,10 @@ import { DateSelect } from '../components/date-select';
 const initialDate = new Date(2022, 10, 20);
 
 const Profile = () => {
-  const { username } = useParams();
+  const [name, setName] = useState('');
   const [currentDate, setCurrentDate] = useState(initialDate);
+
+  const { username } = useParams();
   const [auth, setAuth] = useLocalStorage('copa.auth', {});
   const navigate = useNavigate();
 
@@ -36,7 +38,7 @@ const Profile = () => {
   }, [currentDate])
   
 
-  const user = useAsync(async () => {
+  const hints = useAsync(async () => {
     try {
       const res = await axios({
         method: 'get',
@@ -44,8 +46,8 @@ const Profile = () => {
         url: `/users/hints/${username}`        
       })
 
-      console.log(res.data)
       const hintsMap = res.data.hints.reduce((acc, hint) => {
+        // acc[hint.gameId] = hint;
         acc[hint.gameId] = {
           homeTeamScore: hint.homeTeamScore,
           awayTeamScore: hint.awayTeamScore
@@ -53,17 +55,15 @@ const Profile = () => {
         return acc;
       }, {});
 
-      return {
-        ...res.data,
-        hintsMap,
-      }
+      setName(res.data.name);
+      return hintsMap      
     }
     catch (err) {
       console.warn(err.message);
       toast.error('Erro ao carregar os palpites');
       return [];
     }
-  }, [currentDate])
+  }, [currentDate, username])
 
 
   const logout = () => {
@@ -71,10 +71,9 @@ const Profile = () => {
     navigate('/login');
   }
 
-  const isLoading = games?.loading || user?.loading;
-  const hasError = games?.error || user?.error;
+  const isLoading = games?.loading || hints?.loading;
+  const hasError = games?.error || hints?.error;
   const isReady = !isLoading && !hasError;
-
 
   // if (!auth?.user?.id) {
   //   return <Navigate to="/" replace={true} />
@@ -102,11 +101,11 @@ const Profile = () => {
             <Link to="/dashboard">            
               <ArrowLeft size={32} weight='bold' className="text-white hover:scale-110" />
             </Link>
-            <h3 className='text-2xl font-bold'>{ user?.name }</h3>
+            <h3 className='text-2xl font-bold'>{ name }</h3>
           </div>
         </section>
 
-        <section id="content" className='container max-w-3xl p-4 space-y-4'>
+        <section id="content" className='container max-w-3xl p-4 pb-16 space-y-4'>
 
           <h2 className='text-red-500 text-xl font-bold'>Seus palpites</h2>
           
@@ -124,8 +123,8 @@ const Profile = () => {
                   homeTeam = {game.homeTeam}
                   awayTeam = {game.awayTeam}
                   gameTime = {format(new Date(game.gameTime), 'H:mm')}
-                  homeTeamScore={user?.value?.[game.id]?.homeTeamScore || ''}
-                  awayTeamScore={user?.value?.[game.id]?.awayTeamScore || ''}
+                  homeTeamScore={hints?.value?.[game.id]?.homeTeamScore || ''}
+                  awayTeamScore={hints?.value?.[game.id]?.awayTeamScore || ''}
                   disabled={true}
                 />
               ))

@@ -1,5 +1,5 @@
 import { Link, Navigate } from "react-router-dom";
-import { CaretLeft } from 'phosphor-react';
+import { ArrowLeft } from 'phosphor-react';
 import { useLocalStorage } from 'react-use';
 import { toast } from 'react-toastify';
 import { useFormik } from 'formik';
@@ -51,13 +51,15 @@ const Login = () => {
   return (
     <>
       <header className="flex justify-center p-4 border-b border-red-300">
-        <img src="img/logo/logo-fundo-branco.svg" className="w-32 md:w-40" />
+        <Link to="/">
+          <img src="img/logo/logo-fundo-branco.svg" className="w-32 md:w-40" />
+        </Link>
       </header>
 
       <main className="p-4 container max-w-2xl">
         <div className="py-4 flex space-x-4 items-center">
           <Link to="/">
-            <CaretLeft size={32} weight='bold' className="text-red-700 hover:scale-110"/>
+            <ArrowLeft size={32} weight='bold' className="text-red-700 hover:scale-110"/>
           </Link>
           <h2 className="text-xl font-bold">Entre na sua conta</h2>
         </div>

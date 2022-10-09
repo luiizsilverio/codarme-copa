@@ -1,6 +1,7 @@
 import { Link, Navigate } from 'react-router-dom';
 import { useLocalStorage, useAsync } from 'react-use';
 import { format } from 'date-fns';
+import { toast } from 'react-toastify';
 import axios from 'axios';
 
 import { UserCircle } from 'phosphor-react';
@@ -14,23 +15,58 @@ const Dashboard = () => {
   const [currentDate, setCurrentDate] = useState(initialDate);
   const [auth] = useLocalStorage('copa.auth', {});
 
-  const state = useAsync(async () => {
-    const res = await axios({
-      method: 'get',
-      baseURL: import.meta.env.VITE_API_URL,
-      url: '/games',
-      params: {
-        gameTime: currentDate
-      }
-    })
-    return res.data;
+  const games = useAsync(async () => {
+    try {
+      const res = await axios({
+        method: 'get',
+        baseURL: import.meta.env.VITE_API_URL,
+        url: '/games',
+        params: {
+          gameTime: currentDate
+        }
+      })
+      return res.data;
+    } catch (err) {
+      console.warn(err.message);
+      toast.error('Erro ao carregar os jogos');
+      return [];
+    }
   }, [currentDate])
 
+  const hints = useAsync(async () => {
+    try {
+      const res = await axios({
+        method: 'get',
+        baseURL: import.meta.env.VITE_API_URL,
+        url: `/hints/${auth.user.username}`        
+      })
+
+      const hintsMap = res.data.reduce((acc, hint) => {
+        acc[hint.gameId] = {
+          homeTeamScore: hint.homeTeamScore,
+          awayTeamScore: hint.awayTeamScore
+        }
+        return acc;
+      }, {});
+
+      return hintsMap;
+    }
+    catch (err) {
+      console.warn(err.message);
+      toast.error('Erro ao carregar os palpites');
+      return [];
+    }
+  }, [currentDate])
   
+
   if (!auth?.user?.id) {
     return <Navigate to="/" replace={true} />
   }
 
+  const isLoading = games?.loading || hints?.loading;
+  const hasError = games?.error || hints?.error;
+  const isReady = !isLoading && !hasError;
+  
   return (
     <>
       <header className="bg-red-500 text-white p-4">
@@ -55,18 +91,19 @@ const Dashboard = () => {
           <DateSelect currentDate={currentDate} onChange={setCurrentDate} />
 
           <div className='space-y-4'>
-            {state.loading && 'Carregando jogos...'}
+            {isLoading && 'Carregando jogos...'}
+            {hasError && 'Ops! Algo deu errado'}
 
-            {state.error && 'Ops! Algo deu errado'}
-
-            {!state.loading && !state.error && (
-              state?.value?.map((game) => (
+            {isReady && (
+              games?.value?.map((game) => (
                 <Card
                   key = {game.id}
                   gameId = {game.id}
                   homeTeam = {game.homeTeam}
                   awayTeam = {game.awayTeam}
                   gameTime = {format(new Date(game.gameTime), 'H:mm')}
+                  homeTeamScore={hints?.value?.[game.id]?.homeTeamScore || ''}
+                  awayTeamScore={hints?.value?.[game.id]?.awayTeamScore || ''}
                 />
               ))
             )}                      

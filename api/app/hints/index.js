@@ -65,5 +65,25 @@ export const create = async (ctx) => {
       ctx.body = error;
       ctx.status = 500;
   }
+}
 
+export const list = async (ctx) => {
+  const username = ctx.request.params.username;
+  const user = await prisma.user.findFirst({
+    where: { username }
+  });
+
+  if (!user) {
+    ctx.status = 404;
+    return;
+  }
+
+  const hints = await prisma.hint.findMany({
+    where: {
+      userId: user.id
+    },
+    // include: { game: true }
+  })
+
+  ctx.body = hints;
 }

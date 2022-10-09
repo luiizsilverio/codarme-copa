@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { ArrowLeft, SignOut } from 'phosphor-react';
 import { useAsync, useLocalStorage } from 'react-use';
+import { toast } from 'react-toastify';
+import { format } from 'date-fns';
 import axios from 'axios';
 
 import { Card } from '../components/card';
@@ -14,15 +16,21 @@ const Profile = () => {
   const [auth, setAuth] = useLocalStorage('copa.auth', {});
 
   const state = useAsync(async () => {
-    const res = await axios({
-      method: 'get',
-      baseURL: import.meta.env.VITE_API_URL,
-      url: '/games',
-      params: {
-        gameTime: currentDate
-      }
-    })
-    return res.data;
+    try {
+      const res = await axios({
+        method: 'get',
+        baseURL: import.meta.env.VITE_API_URL,
+        url: '/games',
+        params: {
+          gameTime: currentDate
+        }
+      })
+      return res.data;
+    } catch(err) {
+      console.warn(err.message);
+      toast.error('Erro ao carregar os jogos');
+      return [];
+    }
   }, [currentDate])
 
   const logout = () => setAuth({});  
@@ -62,14 +70,21 @@ const Profile = () => {
           <DateSelect currentDate={currentDate} onChange={setCurrentDate} />
 
           <div className='space-y-4'>
-            <Card
-              key = {game.id}
-              gameId = {game.id}
-              homeTeam="sui"
-              awayTeam="cam"
-              gameTime="07:00"
-            />
-            
+            {state.loading && 'Carregando jogos...'}
+
+            {state.error && 'Ops! Algo deu errado'}
+
+            {!state.loading && !state.error && (
+              state?.value?.map((game) => (
+                <Card
+                  key = {game.id}
+                  gameId = {game.id}
+                  homeTeam = {game.homeTeam}
+                  awayTeam = {game.awayTeam}
+                  gameTime = {format(new Date(game.gameTime), 'H:mm')}
+                />
+              ))
+            )}                      
           </div>
           
         </section>

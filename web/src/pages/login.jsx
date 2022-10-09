@@ -1,6 +1,7 @@
 import { Link, Navigate } from "react-router-dom";
 import { CaretLeft } from 'phosphor-react';
 import { useLocalStorage } from 'react-use';
+import { toast } from 'react-toastify';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import axios from 'axios';
@@ -19,17 +20,22 @@ const Login = () => {
 
   const formik = useFormik({
     onSubmit: async (values) => {
-      const response = await axios({
-        method: 'get',
-        baseURL: import.meta.env.VITE_API_URL, 
-        url: '/login',
-        auth: {
-          username: values.email,
-          password: values.password,
-        }
-      });
-      // localStorage.setItem('copa.auth', JSON.stringify(response.data));
-      setAuth(response.data);
+      try {
+        const response = await axios({
+          method: 'get',
+          baseURL: import.meta.env.VITE_API_URL, 
+          url: '/login',
+          auth: {
+            username: values.email,
+            password: values.password,
+          }
+        })
+        // localStorage.setItem('copa.auth', JSON.stringify(response.data));
+        setAuth(response.data);
+      } catch(err) {
+        console.warn(err.message);
+        toast.error('Erro ao carregar os jogos');
+      }
     },
     initialValues: {
       email: '',

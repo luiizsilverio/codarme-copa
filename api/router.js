@@ -10,6 +10,7 @@ router.get('/login', users.login);
 router.get('/users', users.list);
 
 router.post('/hint', hints.create);
+router.get('/hints/:username', hints.list);
 
 router.get('/games', games.list);
 

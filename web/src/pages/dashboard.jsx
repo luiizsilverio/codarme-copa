@@ -72,7 +72,7 @@ const Dashboard = () => {
       <header className="bg-red-500 text-white p-4">
         <div className="container max-w-3xl pt-2 md:pr-4 flex justify-between">
           <img src="img/logo/logo-fundo-vermelho.svg" className="w-28 md:w-40" />
-          <Link to="/profile">
+          <Link to={`/${auth?.user?.username}`}>
             <UserCircle size={32} weight='bold' className="text-white hover:scale-110" />
           </Link>
         </div>

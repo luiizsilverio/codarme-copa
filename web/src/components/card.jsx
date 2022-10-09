@@ -9,7 +9,16 @@ const validationSchema = yup.object().shape({
 });
 
 export const Card = (props) => {
-  const { gameId, homeTeam, awayTeam, gameTime, homeTeamScore, awayTeamScore } = props;
+  const { 
+    gameId, 
+    homeTeam, 
+    awayTeam, 
+    gameTime, 
+    homeTeamScore, 
+    awayTeamScore,
+    disabled = false
+  } = props;
+
   const [auth] = useLocalStorage('copa.auth');
 
   const formik = useFormik({
@@ -54,6 +63,7 @@ export const Card = (props) => {
           value={formik.values.homeTeamScore}
           onChange={formik.handleChange}
           onBlur={formik.handleSubmit}
+          disabled={disabled}
         />
         
         <span className='px-2 text-red-500 font-bold'>X</span>              
@@ -65,6 +75,7 @@ export const Card = (props) => {
           value={formik.values.awayTeamScore}
           onChange={formik.handleChange}
           onBlur={formik.handleSubmit}
+          disabled={disabled}
         />
 
         <img src={`/img/flags/${awayTeam}.png`} />

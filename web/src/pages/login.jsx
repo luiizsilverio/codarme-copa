@@ -34,7 +34,7 @@ const Login = () => {
         setAuth(response.data);
       } catch(err) {
         console.warn(err.message);
-        toast.error('Erro ao carregar os jogos');
+        toast.error('Erro ao fazer Log in');
       }
     },
     initialValues: {

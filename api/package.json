@@ -2,11 +2,11 @@
   "name": "api",
   "version": "1.0.0",
   "description": "",
-  "main": "app/index.js",
+  "main": "api/index.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon app/index.js",
-    "start": "node app/index.js"
+    "dev": "nodemon api/index.js",
+    "start": "node api/index.js"
   },
   "prisma": {
     "seed": "node prisma/seed.js"
